@@ -26,4 +26,11 @@ public class reverseWordTest {
 		assertEquals(reversed, "Mess! a is This "); 
     }
 
+    @Test
+    public void test_reversewords_nopunctuation() {
+		String orig = "abc def ghi jkl mno";
+		String reversed = reverse_words.StringReverse(orig);
+		assertEquals(reversed, "mno jkl ghi def abc "); 
+    }
+
 }

@@ -27,101 +27,42 @@
 
   <build>
       <plugins>
+
 	  	<plugin>
-			<groupId>com.googlecode.maven-download-plugin</groupId>
-			<artifactId>download-maven-plugin</artifactId>
-			<version>1.3.0</version>
-			<executions>
-				<execution>
-					<id>wget-cc-test-reporter</id>
-					<phase>generate-resources</phase>
-					<goals>
-						<goal>wget</goal>
-					</goals>
-					<configuration>
-						<url>https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64</url>
-						<skipCache>true</skipCache>
-						<outputFileName>cc-test-reporter</outputFileName>
-						<outputDirectory>${project.build.directory}</outputDirectory>
-					</configuration>
-				</execution>
-				<execution>
-					<id>wget-cc-post-reporter</id>
-					<phase>generate-resources</phase>
-					<goals>
-						<goal>wget</goal>
-					</goals>
-					<configuration>
-						<url>http://qa-rpt01.a.fsglobal.net/files/cc-post-report</url>
-						<skipCache>true</skipCache>
-						<outputFileName>cc-post-report</outputFileName>
-						<outputDirectory>${project.build.directory}</outputDirectory>
-					</configuration>
-				</execution>
-			</executions>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-plugin-plugin</artifactId>
+			<version>3.6.1</version>
 	  	</plugin>
+
 	  	<plugin>
-			<artifactId>exec-maven-plugin</artifactId>
-			<version>1.6.0</version>
-			<groupId>org.codehaus.mojo</groupId>
+			<groupId>org.familysearch.coverage</groupId>
+			<artifactId>cc-maven-plugin</artifactId>
+			<version>0.0.1</version>
 			<executions>
 				<execution>
-					<id>fix-permissions</id>
+					<id>cc-reporter-download</id>
+					<phase>generate-resources</phase>
+					<goals>
+						<goal>cc-reporter-download</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>cc-before-build</id>
 					<phase>process-resources</phase>
 					<goals>
-						<goal>exec</goal>
+						<goal>cc-before-build</goal>
 					</goals>
-					<configuration>
-						<executable>chmod</executable>
-						<arguments>
-							<argument>
-								+x
-							</argument>
-							<argument>
-								${project.build.directory}/cc-post-report
-							</argument>
-							<argument>
-								${project.build.directory}/cc-test-reporter
-							</argument>
-						</arguments>
-					</configuration>
 				</execution>
-				<!-- At package time, post the coverage results to CodeClimate -->
 				<execution>
-					<id>cc-test-reporter after-build</id>
+					<id>cc-after-build</id>
 					<phase>package</phase>
 					<goals>
-						<goal>exec</goal>
+						<goal>cc-after-build</goal>
 					</goals>
-					<configuration>
-						<executable>bash</executable>
-						<arguments>
-							<argument>
-								${project.build.directory}/cc-post-report
-							</argument>
-							<argument>
-								${project.build.sourceDirectory}
-							</argument>
-							<argument>
-								${codeclimate.test.reporter.id}
-							</argument>
-						</arguments>
-					</configuration>
-				</execution>
-				<!-- Tell CodeClimate were about to do a build -->
-				<execution>
-					<id>cc-test-reporter before-build</id>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>exec</goal>
-					</goals>
-					<configuration>
-						<executable>${project.build.directory}/cc-test-reporter</executable>
-						<commandlineArgs>before-build</commandlineArgs>
-					</configuration>
 				</execution>
 			</executions>
 		</plugin>
+
 		<plugin>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
