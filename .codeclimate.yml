@@ -3,10 +3,6 @@ engines:
   sonar-java:
     enabled: true
     channel: beta
-    checks:
-      squid:S00112: # Requires dedicated exceptions even for tests
-        enabled: false
-      squid:S106:
-        enabled: false
+    checks: sonarJava.cfg
     config:
       sonar.java.source: 1.8
